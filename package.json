@@ -1,0 +1,10 @@
+{
+  "name": "cardapio3d",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Cardápio em livro 3D com realidade aumentada espacial WebXR",
+  "scripts": {"start": "node server.js", "test": "node --test tests/*.test.js", "check": "node --check server.js && node --check public/app.js && node --check public/book.js"},
+  "engines": {"node": ">=22"},
+  "dependencies": {"three": "0.186.0"}
+}

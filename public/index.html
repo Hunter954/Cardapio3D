@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#151c18"><meta name="description" content="Abra o cardápio, vire as páginas e descubra os sabores em realidade aumentada.">
+  <title>cardapio3d · À mesa, em outra dimensão</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<div id="stage" aria-label="Livro do cardápio em três dimensões"></div>
+<div id="overlay">
+  <header><a class="brand" href="/" aria-label="cardapio3d início"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 8 4 4v21l12 4 12-4V4L16 8Zm0 0v21"/></svg>cardapio<span>3d</span></a><span id="mode" class="pill">EXPERIÊNCIA 3D</span><button id="exit" class="quiet" hidden>Sair do AR</button></header>
+  <main id="intro">
+    <p class="eyebrow">À MESA, EM OUTRA DIMENSÃO</p><h1>Seu próximo sabor.<br><em>Bem na sua frente.</em></h1>
+    <p class="intro-copy">Um cardápio que ganha espaço.<br>Abra, explore e vire a página.</p>
+  </main>
+  <div id="status" role="status" aria-live="polite">Preparando seu cardápio…</div>
+  <div id="placement" hidden><span class="crosshair" aria-hidden="true">＋</span><p>Olhe para onde deseja deixar o cardápio.</p><button id="place" class="primary">Fixar aqui no ar</button></div>
+  <div id="bottom">
+    <section id="entry"><button id="start-ar" class="primary" disabled><span aria-hidden="true">◈</span> Abrir no meu espaço</button><button id="preview" class="text-button">Explorar em 3D <span aria-hidden="true">↗</span></button><p id="compatibility">Verificando realidade aumentada…</p></section>
+    <section id="reader" hidden>
+      <p id="hint">Arraste para girar · Use dois dedos para aproximar</p>
+      <nav class="pagination" aria-label="Páginas do cardápio"><button id="prev" aria-label="Página anterior">←</button><div><small id="category">BOAS-VINDAS</small><span id="page-count">Capa</span></div><button id="next" aria-label="Próxima página">→</button></nav>
+      <div class="reader-tools"><button id="reset" class="quiet">Reposicionar</button><label>Tamanho <select id="size"><option value="0.75">Pequeno</option><option value="1" selected>Grande</option><option value="1.4">Gigante</option></select></label><button id="read-text" class="quiet">Ler em texto</button></div>
+    </section>
+    <footer><span>CARDÁPIO DEMONSTRATIVO</span><span>FEITO PARA EXPLORAR</span></footer>
+  </div>
+  <dialog id="text-dialog"><button id="close-text" aria-label="Fechar cardápio em texto">✕</button><p class="eyebrow">CARDÁPIO DEMONSTRATIVO</p><h2>Escolha seu sabor</h2><div id="text-menu"></div></dialog>
+</div>
+<noscript>Ative o JavaScript para abrir o cardápio em 3D.</noscript>
+<script type="module" src="/app.js"></script>
+</body></html>
