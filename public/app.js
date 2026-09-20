@@ -36,7 +36,7 @@ function beginPlacement(){
  status('Mova o celular devagar para reconhecer o ambiente.');
 }
 function resetAfterXR(){
- clearAnchor();session=null;referenceSpace=null;placing=false;placeRequested=false;xrStarting=false;trackingLost=false;
+ clearAnchor();session=null;referenceSpace=null;placing=false;placeRequested=false;xrStarting=false;trackingLost=false;reading=false;book.setClosed();
  document.body.classList.remove('ar');$('placement').hidden=true;$('exit').hidden=true;$('mode').textContent='EXPERIÊNCIA 3D';
  document.body.classList.toggle('reading',reading);$('hint').textContent='Arraste para girar · Use dois dedos para aproximar';
  $('entry').hidden=false;$('reader').hidden=!reading;$('start-ar').disabled=false;
@@ -105,7 +105,7 @@ async function init(){
   $('start-ar').disabled=!supported;
   $('compatibility').textContent=supported?'Câmera e rastreamento serão solicitados ao abrir.':'AR indisponível neste navegador. Explore o livro em 3D.';
   status('');
- }catch(error){status('Não foi possível carregar o 3D neste aparelho. Você pode ler o cardápio em texto.');$('preview').textContent='Ler cardápio';$('preview').onclick=()=> $('text-dialog').showModal();}
+ }catch(error){console.warn('3D initialization failed:',error.name,error.message);status('Não foi possível carregar o 3D neste aparelho. Você pode ler o cardápio em texto.');$('compatibility').textContent='Visualização 3D indisponível neste navegador.';$('preview').textContent='Ler cardápio';$('preview').onclick=()=> $('text-dialog').showModal();}
 }
 $('start-ar').addEventListener('click',startAR);
 $('preview').addEventListener('click',beginPreview);
