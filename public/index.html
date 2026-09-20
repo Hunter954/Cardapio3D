@@ -17,7 +17,7 @@
   <div id="status" role="status" aria-live="polite">Preparando seu cardápio…</div>
   <div id="placement" hidden><span class="crosshair" aria-hidden="true">＋</span><p>Olhe para onde deseja deixar o cardápio.</p><button id="place" class="primary">Fixar aqui no ar</button></div>
   <div id="bottom">
-    <section id="entry"><button id="start-ar" class="primary" disabled><span aria-hidden="true">◈</span> Abrir no meu espaço</button><button id="preview" class="text-button">Explorar em 3D <span aria-hidden="true">↗</span></button><p id="compatibility">Verificando realidade aumentada…</p></section>
+    <section id="entry"><button id="start-ar" class="primary"><span aria-hidden="true">◈</span> Abrir no meu espaço</button><button id="preview" class="text-button">Explorar em 3D <span aria-hidden="true">↗</span></button><p id="compatibility">Verificando realidade aumentada…</p></section>
     <section id="reader" hidden>
       <p id="hint">Arraste para girar · Use dois dedos para aproximar</p>
       <nav class="pagination" aria-label="Páginas do cardápio"><button id="prev" aria-label="Página anterior">←</button><div><small id="category">BOAS-VINDAS</small><span id="page-count">Capa</span></div><button id="next" aria-label="Próxima página">→</button></nav>
@@ -26,7 +26,8 @@
     <footer><span>CARDÁPIO DEMONSTRATIVO</span><span>FEITO PARA EXPLORAR</span></footer>
   </div>
   <dialog id="text-dialog"><button id="close-text" aria-label="Fechar cardápio em texto">✕</button><p class="eyebrow">CARDÁPIO DEMONSTRATIVO</p><h2>Escolha seu sabor</h2><div id="text-menu"></div></dialog>
+  <dialog id="ar-help" aria-labelledby="ar-help-title"><h2 id="ar-help-title">Abrir no seu espaço</h2><p id="ar-help-message"></p><p id="ar-help-detail"></p><div class="help-actions"><a id="open-chrome" class="primary" hidden>Abrir no Chrome</a><button id="copy-link" class="quiet">Copiar link</button><button id="close-ar-help" class="quiet">Entendi</button></div><p id="copy-result" role="status"></p><small>Para fixar no ambiente, o aparelho precisa oferecer realidade aumentada espacial. Apenas liberar a câmera não habilita esse recurso.</small></dialog>
 </div>
 <noscript>Ative o JavaScript para abrir o cardápio em 3D.</noscript>
-<script type="module" src="/app.js"></script>
+<script type="module" src="/entry.js"></script>
 </body></html>

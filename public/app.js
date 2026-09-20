@@ -43,11 +43,16 @@ function resetAfterXR(){
  book.root.visible=true;book.root.matrixAutoUpdate=true;book.root.position.set(0,0,0);book.root.quaternion.identity();resize();status('Sessão encerrada. Você pode abrir novamente no seu espaço.');
 }
 async function startAR(){
- if(session||xrStarting||!book)return;
- xrStarting=true;$('start-ar').disabled=true;
+ if(session)return;
+ if(xrStarting){status('Aguardando a autorização do navegador. Verifique a solicitação de realidade aumentada.');return;}
+ if(!book){status('O livro ainda está carregando. Tente novamente em alguns segundos.');return;}
+ xrStarting=true;$('start-ar').setAttribute('aria-busy','true');
+ status('Solicitando câmera e realidade aumentada… Confirme a autorização do navegador.');
+ const pendingTimer=setTimeout(()=>{if(xrStarting&&!session)window.dispatchEvent(new CustomEvent('cardapio:ar-error',{detail:{title:'Aguardando o navegador',message:'Verifique se existe uma solicitação de permissão aberta. Se nada apareceu, abra este link diretamente no Chrome e tente novamente.'}}));},15000);
  try{
   // requestSession must be called directly from the click before any awaited operation.
   const started=await navigator.xr.requestSession('immersive-ar',{requiredFeatures:['local','dom-overlay'],optionalFeatures:['anchors'],domOverlay:{root:$('overlay')}});
+  clearTimeout(pendingTimer);if($('ar-help').open)$('ar-help').close();
   session=started;
   started.addEventListener('end',resetAfterXR,{once:true});
   referenceSpace=await started.requestReferenceSpace('local');
@@ -58,8 +63,13 @@ async function startAR(){
   book.root.matrixAutoUpdate=true;book.root.scale.setScalar(scale);book.setClosed();beginPlacement();
  }catch(error){
   if(session){try{await session.end();}catch{} }
-  xrStarting=false;$('start-ar').disabled=false;
-  status(error.name==='NotAllowedError'||error.name==='SecurityError'?'Permissão não liberada. Permita a realidade aumentada nas configurações do navegador e tente novamente.':'Não foi possível iniciar o AR. Abra no Chrome de um Android compatível ou explore em 3D.');
+  xrStarting=false;
+  const denied=error.name==='NotAllowedError'||error.name==='SecurityError';
+  const message=denied?'A autorização foi recusada ou bloqueada. Nas permissões deste site no Chrome, libere câmera e realidade aumentada. Depois tente novamente.':'Este navegador ou aparelho não disponibilizou os recursos necessários. Abra diretamente no Chrome no Android e confira se o Google Play Services para RA está instalado e ativo. Se o aparelho não for compatível com ARCore, a fixação espacial não estará disponível.';
+  status(denied?'Permissão não liberada. Veja a orientação na tela.':'Não foi possível iniciar o AR. Veja a orientação na tela.');
+  window.dispatchEvent(new CustomEvent('cardapio:ar-error',{detail:{title:denied?'Permissão necessária':'Não foi possível abrir no seu espaço',message,detail:`Detalhe: ${error.name || 'Erro desconhecido'}`}}));
+ }finally{
+  clearTimeout(pendingTimer);$('start-ar').removeAttribute('aria-busy');
  }
 }
 function place(frame,pose){
@@ -99,15 +109,14 @@ async function init(){
  try{
   renderer=new THREE.WebGLRenderer({alpha:true,antialias:true,powerPreference:'high-performance'});
   renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.setClearColor(0x000000,0);renderer.xr.enabled=true;$('stage').append(renderer.domElement);
-  const image=await new Promise(resolve=>{const i=new Image();i.onload=()=>resolve(i);i.onerror=()=>resolve(null);i.src='/food.jpg';});
+  const image=await new Promise(resolve=>{const i=new Image(),timer=setTimeout(()=>resolve(null),5000);i.onload=()=>{clearTimeout(timer);resolve(i);};i.onerror=()=>{clearTimeout(timer);resolve(null);};i.src='/food.jpg';});
   book=new MenuBook(image);book.onChange=updateUI;scene.add(book.root);resize();updateUI();renderer.setAnimationLoop(render);
-  const supported=!!navigator.xr && await navigator.xr.isSessionSupported('immersive-ar').catch(()=>false);
-  $('start-ar').disabled=!supported;
-  $('compatibility').textContent=supported?'Câmera e rastreamento serão solicitados ao abrir.':'AR indisponível neste navegador. Explore o livro em 3D.';
+  window.dispatchEvent(new Event('cardapio:ready'));
+  $('compatibility').textContent='Toque para liberar a realidade aumentada ou verificar a compatibilidade.';
   status('');
- }catch(error){console.warn('3D initialization failed:',error.name,error.message);status('Não foi possível carregar o 3D neste aparelho. Você pode ler o cardápio em texto.');$('compatibility').textContent='Visualização 3D indisponível neste navegador.';$('preview').textContent='Ler cardápio';$('preview').onclick=()=> $('text-dialog').showModal();}
+ }catch(error){window.dispatchEvent(new Event('cardapio:failed'));console.warn('3D initialization failed:',error.name,error.message);status('Não foi possível carregar o 3D neste aparelho. Você pode ler o cardápio em texto.');$('compatibility').textContent='Toque em “Abrir no meu espaço” para ver a orientação.';$('preview').textContent='Ler cardápio';$('preview').onclick=()=> $('text-dialog').showModal();}
 }
-$('start-ar').addEventListener('click',startAR);
+window.addEventListener('cardapio:open-ar',startAR);
 $('preview').addEventListener('click',beginPreview);
 $('place').addEventListener('click',()=>{placeRequested=true;$('place').disabled=true;});
 $('exit').addEventListener('click',()=>session?.end().catch(()=>status('Não foi possível encerrar. Use o botão Voltar do navegador.')));

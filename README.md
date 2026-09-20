@@ -8,7 +8,7 @@ Node.js 22 ou superior. Rode `npm ci` e `npm start`. Acesse `http://localhost:30
 
 ## Realidade aumentada
 
-Abra a URL **HTTPS** no Chrome para Android em um aparelho compatível com ARCore e com Google Play Services for AR instalado/atualizado. O aplicativo verifica `isSessionSupported('immersive-ar')`, solicita câmera/rastreamento após tocar em **Abrir no meu espaço** e apresenta a opção **Fixar aqui no ar**. A entrada imersiva precisa de um gesto do usuário: não é possível forçar sua abertura ao carregar uma URL.
+Abra a URL **HTTPS** no Chrome para Android em um aparelho compatível com ARCore e com Google Play Services for AR instalado/atualizado. O botão **Abrir no meu espaço** permanece ativo: solicita a sessão AR dentro do gesto do usuário, mostra o progresso da autorização e apresenta uma orientação em caso de incompatibilidade, falta de permissão ou falha gráfica. Ao iniciar, apresenta **Fixar aqui no ar**. O carregamento 3D não bloqueia o painel de ajuda. A entrada imersiva precisa de um gesto do usuário: não é possível forçar sua abertura ao carregar uma URL.
 
 O livro fica a 1,5 m à frente, na altura aproximada dos olhos, com 1,2 m de largura no tamanho Grande. A transformação é registrada no referencial `local` do WebXR, e nunca ligada à câmera. Se disponível, uma `XRAnchor` mantém essa pose. Aproximar fisicamente o celular aumenta a projeção; virar de costas retira o livro do campo de visão. A âncora existe somente durante a sessão atual; não persiste ao recarregar a página. O ambiente precisa de luz e detalhes visuais para o rastreamento. Em perda de tracking o livro é ocultado, sem saltar para a câmera. Após reset do referencial, é solicitado reposicionamento.
 
